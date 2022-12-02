@@ -1,0 +1,5 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+cn.cimoc.broky.spring.boot.autoconfigure.BrokyAutoConfiguration,\
+  cn.cimoc.broky.spring.boot.autoconfigure.BrokyErrorControllerAutoConfiguration,\
+cn.cimoc.broky.spring.boot.autoconfigure.BrokyHandlerAutoConfiguration,\
+cn.cimoc.broky.spring.boot.autoconfigure.BrokyLogAutoConfiguration
