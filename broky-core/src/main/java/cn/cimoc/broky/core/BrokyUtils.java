@@ -16,4 +16,12 @@ public class BrokyUtils {
     public static BrokyResult ajaxReturn(Integer code, String message){
         return new BrokyResult(code, message, null);
     }
+
+    public static void success() {
+        throw new BrokyException(BrokyError.SUCCESS);
+    }
+
+    public static void fail(BrokyError error) {
+        throw new BrokyException(error);
+    }
 }
