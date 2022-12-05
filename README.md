@@ -24,7 +24,7 @@ Broky 将所有返回给前端的数据（包括任何异常）封装为 [BrokyR
 }
 ```
 
-### 基本使用
+### <span id="base">基本使用</span>
 
 Broky 提供了注解来灵活地开启自动数据封装：[@BrokyResponse](https://github.com/Sagiri-kawaii01/broky/blob/master/broky-core/src/main/java/cn/cimoc/broky/core/BrokyResponse.java)
 
@@ -56,7 +56,7 @@ public class TestController {
     "errCode": 200,
     "errMsg": "成功",
     "data": {
-        "name": 'Sagiri-kawaii01',
+        "name": "Sagiri-kawaii01",
         "age": 22
     }
 }
@@ -66,7 +66,7 @@ public class TestController {
 
 ### 高级用法
 
-**基本使用**只介绍了正常返回数据时的使用方式，如果我们不需要返回数据，或者需要返回错误信息时，自然不可能走正常的 return，去返回上面例子中的 MyPojo 了
+<a id="#base">基本使用</a>只介绍了正常返回数据时的使用方式，如果我们不需要返回数据，或者需要返回错误信息时，自然不可能走正常的 return，去返回上面例子中的 MyPojo 了
 
 同时，错误信息可能出现在任何地方，可能是 Controller（参数校验）、Service（业务逻辑）、以及未知的运行时错误（RuntimeException） 
 
@@ -106,7 +106,9 @@ public MyPojo example() {
 
 因此，Broky 提供了 [BrokyError](https://github.com/Sagiri-kawaii01/broky/blob/master/broky-core/src/main/java/cn/cimoc/broky/core/BrokyError.java)，BrokyException 亦可以接受此类参数
 
-BrokyError 中提供了一些基本的错误信息，根据需要，开发者可以在使用过程中，继承 BrokyError 来自定义新的错误信息
+BrokyError 中提供了一些基本的错误信息，根据需要，开发者可以在使用过程中，继承 BrokyError 来自定义新的错误信息。
+
+此外，抛出异常的语句过于冗长，Broky 提供了 [BrokyBaseController](https://github.com/Sagiri-kawaii01/broky/blob/master/broky-core/src/main/java/cn/cimoc/broky/core/controller/BrokyBaseController.java) 和 [BrokyBaseService](https://github.com/Sagiri-kawaii01/broky/blob/master/broky-core/src/main/java/cn/cimoc/broky/core/service/BrokyBaseService.java)，开发者可以将自己的 Controller 和 Service 继承这两个类，就能使用简短的 `success` 和 `fail` 方法
 
 ---
 
@@ -114,4 +116,105 @@ BrokyError 中提供了一些基本的错误信息，根据需要，开发者可
 
 如果你熟悉 SpringBoot，可能知道 SpringBoot 对于运行时的异常处理方式是通过 BasicErrorController 来处理的
 
-Broky 对
+Broky 默认提供了 BrokyErrorController 作为 bean 来覆盖上述异常处理器，当然，如果你有自己的需求要开发，也可以在<a href="#config">配置</a>中关闭这个功能
+
+
+
+## 异常捕获
+
+异常捕获是开发中非常关键的步骤，一个能让用户看到莫名其妙的错误的系统，可用性算不上高
+
+业务中的逻辑错误信息容易处理
+
+而系统级别的错误最易被遗漏
+
+Broky 提供了一些基本的系统级别的异常捕获，并返回了友好的提示信息
+
+目前支持以下几种异常捕获
+
+| 异常类别               | 处理器                                               | 默认 |
+| ---------------------- | ---------------------------------------------------- | ---- |
+| 参数读取异常           | DefaultHttpMessageNotReadableExceptionHandler        | 开启 |
+| 405错误                | DefaultHttpRequestMethodNotSupportedExceptionHandler | 开启 |
+| 415错误                | DefaultHttpMediaTypeNotSupportedExceptionHandler     | 开启 |
+| validation参数验证失败 | DefaultValidParamExceptionHandler                    | 关闭 |
+
+ 当然，对于以上错误类型，你也可以自己实现，只要继承相应的抽象类就能覆盖 Broky 的默认实现了！
+
+除此以外，你也可以添加更多自己实现的系统异常捕获，只要实现
+
+
+
+## 日志处理
+
+
+
+
+
+## <span id="config">配置</span>
+
+> properties
+
+```properties
+## broky 基本配置
+# broky的总开关，默认为true
+broky.enable
+# 注解在拦截器中的标记字段，一般无需更改
+broky.ann
+# 是否启用 BrokyErrorController，默认为true
+broky.error
+
+## broky 异常处理配置
+# request请求参数异常处理器，默认为true
+broky.handler.http-message-not-readable-handler
+# 405不允许的请求方式错误处理器，默认为true
+broky.handler.method-not-support-handler
+# 415不支持的body类型错误处理器，默认为true
+broky.handler.media-type-not-support-handler
+# javax.validation参数验证失败处理器，默认为false
+broky.handler.valid-param-handler
+
+## broky 日志配置
+# 日志的总开关，默认为true
+broky.log.enable
+# 当方法运行时长超过这个值时记录日志，单位毫秒，默认为0
+broky.log.run-time
+# 方法出现异常时是否展示全部信息，默认为true
+broky.log.exc-full-show
+# 输出日志的长度限制，0表示全部输出，默认为0
+broky.log.result-length
+```
+
+> yml
+
+```yaml
+broky:
+  ## broky 基本配置
+  # broky的总开关，默认为true
+  enable:
+  # 注解在拦截器中的标记字段，一般无需更改
+  ann:
+  # 是否启用 BrokyErrorController，默认为true
+  error:
+  ## broky 异常处理配置
+  handler:
+    # request请求参数异常处理器，默认为true
+    broky.handler.http-message-not-readable-handler:
+    # 405不允许的请求方式错误处理器，默认为true
+    broky.handler.method-not-support-handler:
+    # 415不支持的body类型错误处理器，默认为true
+    broky.handler.media-type-not-support-handler:
+    # javax.validation参数验证失败处理器，默认为false
+    broky.handler.valid-param-handler:
+  ## broky 日志配置
+  log:
+    # 日志的总开关，默认为true
+    broky.log.enable:
+    # 当方法运行时长超过这个值时记录日志，单位毫秒，默认为0
+    broky.log.run-time::
+    # 方法出现异常时是否展示全部信息，默认为true
+    broky.log.exc-full-show:
+    # 输出日志的长度限制，0表示全部输出，默认为0
+    broky.log.result-length:
+```
+

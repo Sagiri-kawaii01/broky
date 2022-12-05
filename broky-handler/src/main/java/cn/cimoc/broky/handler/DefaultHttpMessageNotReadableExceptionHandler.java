@@ -5,7 +5,6 @@ import cn.cimoc.broky.core.BrokyError;
 import cn.cimoc.broky.core.BrokyResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -15,7 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * <p>
  */
 @Slf4j
-public class DefaultHttpMessageNotReadableExceptionHandler implements HttpMessageNotReadableExceptionHandler {
+public class DefaultHttpMessageNotReadableExceptionHandler extends BaseHttpMessageNotReadableExceptionHandler {
     @ExceptionHandler(value = HttpMessageNotReadableException.class)
     @ResponseBody
     public BrokyResult handle(HttpMessageNotReadableException e) {

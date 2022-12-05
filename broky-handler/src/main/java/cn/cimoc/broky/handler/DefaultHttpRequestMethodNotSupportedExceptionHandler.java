@@ -4,7 +4,6 @@ import cn.cimoc.broky.core.BrokyUtils;
 import cn.cimoc.broky.core.BrokyResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -15,7 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * <p>
  */
 @Slf4j
-public class DefaultHttpRequestMethodNotSupportedExceptionHandler implements HttpRequestMethodNotSupportedExceptionHandler{
+public class DefaultHttpRequestMethodNotSupportedExceptionHandler extends BaseHttpRequestMethodNotSupportedExceptionHandler {
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     @ResponseBody
     public BrokyResult handle(HttpRequestMethodNotSupportedException e) {

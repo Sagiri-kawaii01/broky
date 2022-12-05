@@ -29,28 +29,28 @@ public class BrokyHandlerAutoConfiguration {
     @Bean
     @ConditionalOnProperty(prefix = BrokyHandlerProperties.PREFIX, name = "http-message-not-readable-handler", havingValue = "true", matchIfMissing = true)
     @ConditionalOnMissingBean
-    public HttpMessageNotReadableExceptionHandler httpMessageNotReadableExceptionHandler() {
+    public BaseHttpMessageNotReadableExceptionHandler httpMessageNotReadableExceptionHandler() {
         return new DefaultHttpMessageNotReadableExceptionHandler();
     }
 
     @Bean
     @ConditionalOnProperty(prefix = BrokyHandlerProperties.PREFIX, name = "valid-param-handler", havingValue = "true")
     @ConditionalOnMissingBean
-    public ValidParamExceptionHandler validParamExceptionHandler() {
+    public BaseValidParamExceptionHandler validParamExceptionHandler() {
         return new DefaultValidParamExceptionHandler();
     }
 
     @Bean
     @ConditionalOnProperty(prefix = BrokyHandlerProperties.PREFIX, name = "method-not-support-handler", havingValue = "true", matchIfMissing = true)
     @ConditionalOnMissingBean
-    public HttpRequestMethodNotSupportedExceptionHandler httpRequestMethodNotSupportedExceptionHandler() {
+    public BaseHttpRequestMethodNotSupportedExceptionHandler httpRequestMethodNotSupportedExceptionHandler() {
         return new DefaultHttpRequestMethodNotSupportedExceptionHandler();
     }
 
     @Bean
     @ConditionalOnProperty(prefix = BrokyHandlerProperties.PREFIX, name = "media-type-not-support-handler", havingValue = "true", matchIfMissing = true)
     @ConditionalOnMissingBean
-    public HttpMediaTypeNotSupportedExceptionHandler httpMediaTypeNotSupportedExceptionHandler() {
-        return new DefaultHttpMediaTypeNotSupportedExceptionHandler();
+    public BaseHttpMediaTypeNotSupportedExceptionHandler httpMediaTypeNotSupportedExceptionHandler() {
+        return new DefaultBaseHttpMediaTypeNotSupportedExceptionHandler();
     }
 }

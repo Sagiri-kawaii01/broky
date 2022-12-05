@@ -20,11 +20,12 @@ public class BrokyLogProperties {
 
     /**
      * 方法的运行时长  当方法的运行时间 >= 设置的值时，才记录。 默认为
+     * TODO 可以设置成注解的形式
      */
     private Long runTime = 0L;
 
     /**
-     * 异常的信息 是否全部展示 保存
+     * 异常的信息 是否全部展示
      */
     private Boolean excFullShow = true;
 

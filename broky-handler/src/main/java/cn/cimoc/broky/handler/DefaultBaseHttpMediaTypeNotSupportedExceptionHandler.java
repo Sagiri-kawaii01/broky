@@ -5,7 +5,6 @@ import cn.cimoc.broky.core.BrokyResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -16,7 +15,7 @@ import java.util.Iterator;
  * <p>
  */
 @Slf4j
-public class DefaultHttpMediaTypeNotSupportedExceptionHandler implements HttpMediaTypeNotSupportedExceptionHandler {
+public class DefaultBaseHttpMediaTypeNotSupportedExceptionHandler extends BaseHttpMediaTypeNotSupportedExceptionHandler {
     @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
     @ResponseBody
     public BrokyResult handle(HttpMediaTypeNotSupportedException e) {

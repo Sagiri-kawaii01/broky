@@ -6,7 +6,6 @@ import cn.cimoc.broky.core.BrokyResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -19,7 +18,7 @@ import java.util.Map;
  * javax.validation参数验证的异常捕获
  */
 @Slf4j
-public class DefaultValidParamExceptionHandler implements ValidParamExceptionHandler {
+public class DefaultValidParamExceptionHandler extends BaseValidParamExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseBody
