@@ -8,6 +8,9 @@ import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.reflect.MethodSignature;
+
+import java.lang.reflect.Method;
 
 /**
  * @author LGZ
@@ -37,13 +40,39 @@ public class BrokyLogAspect {
         long startAt = System.currentTimeMillis();
         Object keys = pjp.proceed();
         long endAt = System.currentTimeMillis();
-        logHandler.handler(pjp, keys, null, new BrokyLogHandlerConfigBuilder().setStartAt(startAt).setEndAt(endAt).build());
+        BrokyLogHandlerConfig handlerConfig = new BrokyLogHandlerConfigBuilder().setStartAt(startAt).setEndAt(endAt).build();
+        // 从切面织入点处通过反射机制获取织入点处的方法
+        MethodSignature signature = (MethodSignature) pjp.getSignature();
+        // 获取切入点所在的方法
+        Method method = signature.getMethod();
+        BrokyLog anno = method.getAnnotation(BrokyLog.class);
+        if (anno == null) {
+            anno = method.getDeclaringClass().getAnnotation(BrokyLog.class);
+        }
+        setRuntimeFromAnnotation(anno, method, handlerConfig);
+        if (needLog(handlerConfig)) {
+            logHandler.handler(pjp, keys, null, handlerConfig);
+        }
         return keys;
     }
 
     @AfterThrowing(pointcut = "logCut()", throwing = "e")
     public void doExceptionMyLog(JoinPoint jp, Throwable e) {
         logHandler.handler(jp, null, e, new BrokyLogHandlerConfigBuilder().build());
+    }
+
+    private void setRuntimeFromAnnotation(BrokyLog anno, Method method, BrokyLogHandlerConfig handlerConfig) {
+        if (!"-1".equals(anno.runTime())) {
+            try {
+                handlerConfig.setRunTime(Long.parseLong(anno.runTime()));
+            } catch (NumberFormatException nfe) {
+                throw new NumberFormatException("方法" + method.getName() + "的注解参数runtime必须是整数");
+            }
+        }
+    }
+
+    protected boolean needLog(BrokyLogHandlerConfig handlerConfig) {
+        return handlerConfig.getEndAt() - handlerConfig.getStartAt() < handlerConfig.getRunTime();
     }
 
     @Getter

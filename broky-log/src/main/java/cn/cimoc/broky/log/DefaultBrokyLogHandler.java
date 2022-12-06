@@ -38,21 +38,12 @@ public class DefaultBrokyLogHandler implements BrokyLogHandler {
             MethodSignature signature = (MethodSignature) jp.getSignature();
             // 获取切入点所在的方法
             Method method = signature.getMethod();
-            // 获取操作
-            BrokyLog anno = method.getAnnotation(BrokyLog.class);
-            if (anno == null) {
-                anno = method.getDeclaringClass().getAnnotation(BrokyLog.class);
-            }
-            setRuntimeFromAnnotation(anno, method, handlerConfig);
-            if (needLog(e, handlerConfig)) {
-                return;
-            }
-            copyAnnotationValue(anno, logVO);
+            // 获取注解信息
+            copyAnnotationValue(method, logVO);
             // 获取请求的类名
             logVO.setClassName(jp.getTarget().getClass().getName());
             // 获取请求的方法名
             logVO.setMethodName(method.getName());
-
             //请求uri
             logVO.setUri(request.getRequestURI());
             // 请求ip
@@ -84,33 +75,20 @@ public class DefaultBrokyLogHandler implements BrokyLogHandler {
         doLog(e, logVO, handlerConfig);
     }
 
-    protected void copyAnnotationValue(BrokyLog anno, BrokyLogVO logVO) {
+    protected void copyAnnotationValue(Method method, BrokyLogVO logVO) {
+        // 获取注解信息
+        BrokyLog anno = method.getAnnotation(BrokyLog.class);
+        if (anno == null) {
+            anno = method.getDeclaringClass().getAnnotation(BrokyLog.class);
+        }
         logVO.setModel(anno.module());
         logVO.setOptType(anno.optType());
         logVO.setDescription(anno.description());
     }
 
-    protected boolean needLog(Throwable e, BrokyLogHandlerConfig handlerConfig) {
-        return null != e && handlerConfig.getEndAt() - handlerConfig.getStartAt() < handlerConfig.getRunTime();
-    }
-
-    protected void setRuntimeFromAnnotation(BrokyLog anno, Method method, BrokyLogHandlerConfig handlerConfig) {
-        if (!"-1".equals(anno.runTime())) {
-            try {
-                handlerConfig.setRunTime(Long.parseLong(anno.runTime()));
-            } catch (NumberFormatException nfe) {
-                throw new NumberFormatException("方法" + method.getName() + "的注解参数runtime必须是整数");
-            }
-        }
-    }
-
     protected void doLog(Throwable e, BrokyLogVO logVO, BrokyLogHandlerConfig handlerConfig) {
         if (null == e) {
-            long et = handlerConfig.getEndAt() - handlerConfig.getStartAt();
-            if (et < handlerConfig.getRunTime()) {
-                return;
-            }
-            logVO.setExecTime(et);
+            logVO.setExecTime(handlerConfig.getEndAt() - handlerConfig.getStartAt());
             log.info(logVO.toString());
         } else {
             if (pool.exist(e.getClass())) {
