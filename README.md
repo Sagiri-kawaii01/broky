@@ -141,7 +141,7 @@ Broky 提供了一些基本的系统级别的异常捕获，并返回了友好�
 
  当然，对于以上错误类型，你也可以自己实现，只要继承相应的抽象类就能覆盖 Broky 的默认实现了！
 
-除此以外，你也可以添加更多自己实现的系统异常捕获，只要实现
+除此以外，你也可以添加更多自己实现的系统异常捕获，只要实现[BrokyExceptionHandler](https://github.com/Sagiri-kawaii01/broky/blob/master/broky-handler/src/main/java/cn/cimoc/broky/handler/BrokyExceptionHandler.java)接口就能利用到 Broky 的数据封装功能
 
 
 

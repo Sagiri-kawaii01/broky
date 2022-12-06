@@ -27,24 +27,100 @@ public class DefaultBrokyLogHandler implements BrokyLogHandler {
 
     @Override
     public void handler(JoinPoint jp, Object keys, Throwable e, BrokyLogHandlerConfig handlerConfig) {
-        if (null != e) {
+        // 获取RequestAttributes
+        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+        // 从获取RequestAttributes中获取HttpServletRequest的信息
+        HttpServletRequest request = (HttpServletRequest) requestAttributes.resolveReference(RequestAttributes.REFERENCE_REQUEST);
+        // 输出日志VO
+        BrokyLogVO logVO = new BrokyLogVO();
+        try {
+            // 从切面织入点处通过反射机制获取织入点处的方法
+            MethodSignature signature = (MethodSignature) jp.getSignature();
+            // 获取切入点所在的方法
+            Method method = signature.getMethod();
+            // 获取操作
+            BrokyLog anno = method.getAnnotation(BrokyLog.class);
+            if (anno == null) {
+                anno = method.getDeclaringClass().getAnnotation(BrokyLog.class);
+            }
+            setRuntimeFromAnnotation(anno, method, handlerConfig);
+            if (needLog(e, handlerConfig)) {
+                return;
+            }
+            copyAnnotationValue(anno, logVO);
+            // 获取请求的类名
+            logVO.setClassName(jp.getTarget().getClass().getName());
+            // 获取请求的方法名
+            logVO.setMethodName(method.getName());
+
+            //请求uri
+            logVO.setUri(request.getRequestURI());
+            // 请求ip
+            logVO.setIp(getIpAddr(request));
+            //操作时间点
+            logVO.setReqTime(getNowDate());
+
+            //异常名称+异常信息
+            if(null != e){
+                logVO.setExcName(e.getClass().getName());
+                logVO.setExcInfo(stackTraceToString(e.getClass().getName(), e.getMessage(), e.getStackTrace(), handlerConfig));
+            }
+            //请求的参数，参数所在的数组转换成json
+            logVO.setParams(Arrays.toString(jp.getArgs()));
+            //返回值
+            if(null != keys && Void.class.getName() != keys){
+                StringBuilder result = new StringBuilder(handlerConfig.getObjectMapper().writeValueAsString(keys));
+                if (handlerConfig.getResultLength() == 0){
+                    //表示全部
+                    logVO.setReturnValue(result.toString());
+                } else {
+                    String tempResult = result.substring(0, handlerConfig.getResultLength());
+                    logVO.setReturnValue(tempResult);
+                }
+            }
+        } catch (Exception ignored) {
+
+        }
+        doLog(e, logVO, handlerConfig);
+    }
+
+    protected void copyAnnotationValue(BrokyLog anno, BrokyLogVO logVO) {
+        logVO.setModel(anno.module());
+        logVO.setOptType(anno.optType());
+        logVO.setDescription(anno.description());
+    }
+
+    protected boolean needLog(Throwable e, BrokyLogHandlerConfig handlerConfig) {
+        return null != e && handlerConfig.getEndAt() - handlerConfig.getStartAt() < handlerConfig.getRunTime();
+    }
+
+    protected void setRuntimeFromAnnotation(BrokyLog anno, Method method, BrokyLogHandlerConfig handlerConfig) {
+        if (!"-1".equals(anno.runTime())) {
+            try {
+                handlerConfig.setRunTime(Long.parseLong(anno.runTime()));
+            } catch (NumberFormatException nfe) {
+                throw new NumberFormatException("方法" + method.getName() + "的注解参数runtime必须是整数");
+            }
+        }
+    }
+
+    protected void doLog(Throwable e, BrokyLogVO logVO, BrokyLogHandlerConfig handlerConfig) {
+        if (null == e) {
+            long et = handlerConfig.getEndAt() - handlerConfig.getStartAt();
+            if (et < handlerConfig.getRunTime()) {
+                return;
+            }
+            logVO.setExecTime(et);
+            log.info(logVO.toString());
+        } else {
             if (pool.exist(e.getClass())) {
                 handlerConfig.setExcFullShow(false);
-                BrokyLogVO logVO = this.getLog(jp, keys, e, handlerConfig);
                 logVO.setExecTime(handlerConfig.getEndAt() - handlerConfig.getStartAt());
                 log.warn(logVO.toString());
                 return;
             }
-            BrokyLogVO logVO = this.getLog(jp, keys, e, handlerConfig);
             logVO.setExecTime(-1L);
             log.error(logVO.toString());
-        } else {
-            long time;
-            if ((time = handlerConfig.getEndAt() - handlerConfig.getStartAt()) >= handlerConfig.getRunTime()) {
-                BrokyLogVO logVO = this.getLog(jp, keys, null, handlerConfig);
-                logVO.setExecTime(time);
-                log.info(logVO.toString());
-            }
         }
     }
 
@@ -116,62 +192,5 @@ public class DefaultBrokyLogHandler implements BrokyLogHandler {
         return simpleDateFormat.format(now);
     }
 
-    protected BrokyLogVO getLog(JoinPoint jp, Object keys, Throwable e, BrokyLogHandlerConfig handlerConfig) {
-        // 获取RequestAttributes
-        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
-        // 从获取RequestAttributes中获取HttpServletRequest的信息
-        HttpServletRequest request = (HttpServletRequest) requestAttributes.resolveReference(RequestAttributes.REFERENCE_REQUEST);
-        // 输出日志VO
-        BrokyLogVO logVo = new BrokyLogVO();
-        try {
-            // 从切面织入点处通过反射机制获取织入点处的方法
-            MethodSignature signature = (MethodSignature) jp.getSignature();
-            // 获取切入点所在的方法
-            Method method = signature.getMethod();
-            // 获取操作
-            BrokyLog opLog = method.getAnnotation(BrokyLog.class);
-            if (opLog == null) {
-                opLog = method.getDeclaringClass().getAnnotation(BrokyLog.class);
-            }
-            logVo.setModel(opLog.module());
-            logVo.setOptType(opLog.optType());
-            logVo.setDescription(opLog.description());
-            // 获取请求的类名
-            String className = jp.getTarget().getClass().getName();
-            logVo.setClassName(className);
-            // 获取请求的方法名
-            String methodName = method.getName();
-            logVo.setMethodName(methodName);
 
-            //请求uri
-            String uri = request.getRequestURI();
-            logVo.setUri(uri);
-            logVo.setIp(getIpAddr(request));
-            //操作时间点
-            logVo.setReqTime(getNowDate());
-
-            //异常名称+异常信息
-            if(null != e){
-                logVo.setExcName(e.getClass().getName());
-                logVo.setExcInfo(stackTraceToString(e.getClass().getName(), e.getMessage(), e.getStackTrace(), handlerConfig));
-            }
-            //请求的参数，参数所在的数组转换成json
-            String params =  Arrays.toString(jp.getArgs());
-            logVo.setParams(params);
-            //返回值
-            if(null != keys && Void.class.getName() != keys){
-                StringBuilder result = new StringBuilder(handlerConfig.getObjectMapper().writeValueAsString(keys));
-                if (handlerConfig.getResultLength() == 0){
-                    //表示全部
-                    logVo.setReturnValue(result.toString());
-                } else {
-                    String tempResult=result.substring(0, handlerConfig.getResultLength());
-                    logVo.setReturnValue(tempResult);
-                }
-            }
-        } catch (Exception ignored) {
-
-        }
-        return logVo;
-    }
 }
