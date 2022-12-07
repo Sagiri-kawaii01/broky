@@ -24,9 +24,9 @@ public class BrokyLogProperties {
     private Long runTime = 0L;
 
     /**
-     * 异常的信息 是否全部展示
+     * 异常的堆栈信息 是否全部展示
      */
-    private Boolean excFullShow = true;
+    private Boolean excFullShow = false;
 
     /**
      * 输出结果的长度  0 表示全部输出

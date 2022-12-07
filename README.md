@@ -258,8 +258,8 @@ broky:
     # 日志的总开关，默认为true
     broky.log.enable:
     # 当方法运行时长超过这个值时记录日志，单位毫秒，默认为0
-    broky.log.run-time::
-    # 方法出现异常时是否展示全部信息，默认为true
+    broky.log.run-time:
+    # 方法出现异常时是否展示全部堆栈信息，默认为false
     broky.log.exc-full-show:
     # 输出日志的长度限制，0表示全部输出，默认为0
     broky.log.result-length:
