@@ -72,7 +72,7 @@ public class BrokyLogAspect {
     }
 
     protected boolean needLog(BrokyLogHandlerConfig handlerConfig) {
-        return handlerConfig.getEndAt() - handlerConfig.getStartAt() < handlerConfig.getRunTime();
+        return handlerConfig.getEndAt() - handlerConfig.getStartAt() >= handlerConfig.getRunTime();
     }
 
     @Getter
