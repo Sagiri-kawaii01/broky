@@ -53,6 +53,9 @@ public class DefaultBrokyLogHandler implements BrokyLogHandler {
 
             //异常名称+异常信息
             if(null != e){
+                if (pool.exist(e.getClass())) {
+                    handlerConfig.setExcFullShow(false);
+                }
                 logVO.setExcName(e.getClass().getName());
                 logVO.setExcInfo(stackTraceToString(e.getClass().getName(), e.getMessage(), e.getStackTrace(), handlerConfig));
             }
@@ -92,7 +95,6 @@ public class DefaultBrokyLogHandler implements BrokyLogHandler {
             log.info(logVO.toString());
         } else {
             if (pool.exist(e.getClass())) {
-                handlerConfig.setExcFullShow(false);
                 logVO.setExecTime(handlerConfig.getEndAt() - handlerConfig.getStartAt());
                 log.warn(logVO.toString());
                 return;
@@ -104,7 +106,7 @@ public class DefaultBrokyLogHandler implements BrokyLogHandler {
 
     protected String stackTraceToString(String exceptionName, String exceptionMessage, StackTraceElement[] elements, BrokyLogHandlerConfig handlerConfig) {
         StringBuilder builder = new StringBuilder();
-        if(handlerConfig.getExcFullShow()){
+        if (handlerConfig.getExcFullShow()) {
             for (StackTraceElement stet : elements) {
                 builder.append(stet).append("\n");
             }

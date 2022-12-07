@@ -1,6 +1,5 @@
 package cn.cimoc.broky.log;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.aspectj.lang.JoinPoint;
 
 /**
