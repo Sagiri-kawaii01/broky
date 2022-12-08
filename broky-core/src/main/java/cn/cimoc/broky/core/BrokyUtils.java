@@ -2,11 +2,15 @@ package cn.cimoc.broky.core;
 
 /**
  * @author LGZ
- * <p>
+ *
  */
 public class BrokyUtils {
     public static BrokyResult ajaxReturn(Integer errCode, String errMsg, Object data) {
         return new BrokyResult(errCode, errMsg, data);
+    }
+
+    public static BrokyResult ajaxReturn(BrokyError error) {
+        return new BrokyError(error.getErrCode(), error.getErrMsg(), null);
     }
 
     public static BrokyResult ajaxReturn(Object data) {

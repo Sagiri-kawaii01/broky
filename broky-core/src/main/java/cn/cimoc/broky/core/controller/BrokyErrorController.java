@@ -15,7 +15,7 @@ import java.util.Map;
 
 /**
  * @author LGZ
- * <p>
+ *
  */
 @Controller
 @RequestMapping("${server.error.path:${error.path:/error}}")

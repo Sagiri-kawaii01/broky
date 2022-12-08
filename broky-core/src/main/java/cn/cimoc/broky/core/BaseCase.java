@@ -2,7 +2,7 @@ package cn.cimoc.broky.core;
 
 /**
  * @author LGZ
- * <p>
+ *
  */
 public abstract class BaseCase {
     public void success() {

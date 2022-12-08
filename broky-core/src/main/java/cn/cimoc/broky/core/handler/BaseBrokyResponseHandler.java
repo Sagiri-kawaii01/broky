@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author LGZ
- * <p>
+ *
  */
 public abstract class BaseBrokyResponseHandler implements ResponseBodyAdvice<Object> {
 

@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 /**
  * @author LGZ
- * <p>
+ *
  */
 public class BrokyError extends BrokyResult implements Serializable {
 
