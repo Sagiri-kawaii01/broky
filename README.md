@@ -10,7 +10,19 @@
 
 使用 Broky，这些统统都不用你来完成！
 
-## 数据封装
+## Maven 导入
+
+```xml
+<dependency>
+    <groupId>cn.cimoc</groupId>
+    <artifactId>broky-spring-boot-starter</artifactId>
+    <version>1.0</version>
+</dependency>
+```
+
+## 功能
+
+### 数据封装
 
 Broky 将所有返回给前端的数据（包括任何异常）封装为 [BrokyResult](https://github.com/Sagiri-kawaii01/broky/blob/master/broky-core/src/main/java/cn/cimoc/broky/core/BrokyResult.java)
 
@@ -24,7 +36,7 @@ Broky 将所有返回给前端的数据（包括任何异常）封装为 [BrokyR
 }
 ```
 
-### <span id="base">基本使用</span>
+#### <span id="base">基本使用</span>
 
 Broky 提供了注解来灵活地开启自动数据封装：[@BrokyResponse](https://github.com/Sagiri-kawaii01/broky/blob/master/broky-core/src/main/java/cn/cimoc/broky/core/BrokyResponse.java)
 
@@ -64,7 +76,7 @@ public class TestController {
 
 
 
-### 高级用法
+#### 高级用法
 
 <a id="#base">基本使用</a>只介绍了正常返回数据时的使用方式，如果我们不需要返回数据，或者需要返回错误信息时，自然不可能走正常的 return，去返回上面例子中的 MyPojo 了
 
@@ -120,7 +132,7 @@ Broky 默认提供了 BrokyErrorController 作为 bean 来覆盖上述异常处�
 
 
 
-## 异常捕获
+### 异常捕获
 
 异常捕获是开发中非常关键的步骤，一个能让用户看到莫名其妙的错误的系统，可用性算不上高
 
@@ -145,7 +157,7 @@ Broky 提供了一些基本的系统级别的异常捕获，并返回了友好�
 
 
 
-## 日志处理
+### 日志处理
 
 使用 Spring Boot 必定离不开日志系统，而很多时候我们并不需要多么复制的日志处理
 
@@ -153,7 +165,7 @@ Broky 提供了一些基本的系统级别的异常捕获，并返回了友好�
 
 因此，Broky 提供了注解式的日志处理系统
 
-### 快速使用
+#### 快速使用
 
 对于需要记录日志的方法或控制器，只需要在上面加上注解 `@BrokyLog` 即可
 
@@ -166,7 +178,7 @@ Broky 提供了一些基本的系统级别的异常捕获，并返回了友好�
 | optType     | 类型名，用来区分业务                                 | 默认类型 |
 | description | 说明                                                 | 默认说明 |
 
-### 日志内容
+#### 日志内容
 
 被注解标记的方法或控制器会记录运行日志，内容 [BrokyLogVO](https://github.com/Sagiri-kawaii01/broky/blob/master/broky-log/src/main/java/cn/cimoc/broky/log/BrokyLogVO.java) 如下：
 
@@ -184,7 +196,7 @@ Broky 提供了一些基本的系统级别的异常捕获，并返回了友好�
 * 类型名
 * 说明
 
-### 相关配置
+#### 相关配置
 
 当然，并不是标记了注解就一定会记录日志
 
@@ -198,7 +210,7 @@ Broky 提供了 runTime 配置属性，用来控制日志的记录条件，当�
 
 更多配置详见 <a href="#config">配置</a>
 
-### 自定义处理器
+#### 自定义处理器
 
 开发者可以实现 [BrokyLogHandler](https://github.com/Sagiri-kawaii01/broky/blob/master/broky-log/src/main/java/cn/cimoc/broky/log/BrokyLogHandler.java) 接口，并注册成 bean，就能替换掉默认的日志处理 [DefaultBrokyLogHandler](https://github.com/Sagiri-kawaii01/broky/blob/master/broky-log/src/main/java/cn/cimoc/broky/log/DefaultBrokyLogHandler.java)
 
