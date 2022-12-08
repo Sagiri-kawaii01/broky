@@ -198,6 +198,10 @@ Broky 提供了 runTime 配置属性，用来控制日志的记录条件，当�
 
 更多配置详见 <a href="#config">配置</a>
 
+### 自定义处理器
+
+开发者可以实现 [BrokyLogHandler](https://github.com/Sagiri-kawaii01/broky/blob/master/broky-log/src/main/java/cn/cimoc/broky/log/BrokyLogHandler.java) 接口，并注册成 bean，就能替换掉默认的日志处理 [DefaultBrokyLogHandler](https://github.com/Sagiri-kawaii01/broky/blob/master/broky-log/src/main/java/cn/cimoc/broky/log/DefaultBrokyLogHandler.java)
+
 ## <span id="config">配置</span>
 
 > properties
