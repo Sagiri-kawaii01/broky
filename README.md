@@ -1,6 +1,6 @@
 ## Broky —— Sring Boot 初学者的好伙伴
 
-[![Github stars](https://img.shields.io/github/stars/Sagiri-kawaii01/broky?logo=github)](https://github.com/Sagiri-kawaii01/broky)  [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![](https://shields.io/github/v/release/Sagiri-kawaii01/broky?display_name=release&include_prereleases&sort=date)]([Releases · Sagiri-kawaii01/broky (github.com)](https://github.com/Sagiri-kawaii01/broky/releases)) ![](https://img.shields.io/badge/spring--boot-v2.3.0.RELEASE+-green)
+[![Github stars](https://img.shields.io/github/stars/Sagiri-kawaii01/broky?logo=github)](https://github.com/Sagiri-kawaii01/broky)  [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![](https://shields.io/github/v/release/Sagiri-kawaii01/broky?display_name=release&include_prereleases&sort=date)](https://github.com/Sagiri-kawaii01/broky/releases) ![](https://img.shields.io/badge/spring--boot-v2.3.0.RELEASE+-green)
 
 ## 介绍
 
