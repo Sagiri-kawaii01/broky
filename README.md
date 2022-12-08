@@ -12,6 +12,8 @@
 
 ## Maven 导入
 
+目前最新版本为 1.0
+
 ```xml
 <dependency>
     <groupId>cn.cimoc</groupId>
