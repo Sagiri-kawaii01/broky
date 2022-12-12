@@ -62,9 +62,9 @@ public class BrokyLogAspect {
     }
 
     private void setRuntimeFromAnnotation(BrokyLog anno, Method method, BrokyLogHandlerConfig handlerConfig) {
-        if (!"-1".equals(anno.runTime())) {
+        if (anno.runTime() == -1) {
             try {
-                handlerConfig.setRunTime(Long.parseLong(anno.runTime()));
+                handlerConfig.setRunTime(anno.runTime());
             } catch (NumberFormatException nfe) {
                 throw new NumberFormatException("方法" + method.getName() + "的注解参数runtime必须是整数");
             }

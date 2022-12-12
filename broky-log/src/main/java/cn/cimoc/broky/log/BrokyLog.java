@@ -10,7 +10,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface BrokyLog {
-    String runTime() default "-1";
+    long runTime() default -1;
 
     String module() default "默认模块";
     String optType() default "默认类型";
