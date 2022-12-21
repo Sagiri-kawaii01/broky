@@ -5,10 +5,10 @@
     <parent>
         <artifactId>broky</artifactId>
         <groupId>cn.cimoc</groupId>
-        <version>1.0</version>
+        <version>1.0.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-
+    <version>1.0.1</version>
     <artifactId>broky-handler</artifactId>
     <dependencies>
         <dependency>
@@ -19,7 +19,7 @@
         <dependency>
             <groupId>cn.cimoc</groupId>
             <artifactId>broky-core</artifactId>
-            <version>1.0</version>
+            <version>1.0.1</version>
             <optional>true</optional>
         </dependency>
     </dependencies>

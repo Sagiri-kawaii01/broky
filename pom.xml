@@ -7,7 +7,7 @@
     <groupId>cn.cimoc</groupId>
     <artifactId>broky</artifactId>
     <packaging>pom</packaging>
-    <version>1.0</version>
+    <version>1.0.1</version>
     <name>broky</name>
     <url>https://github.com/Sagiri-kawaii01/broky</url>
     <licenses>
@@ -20,7 +20,7 @@
     </licenses>
     <scm>
         <url>https://github.com/Sagiri-kawaii01/broky</url>
-        <tag>v1.0</tag>
+        <tag>v1.0.1</tag>
         <connection>https://github.com/Sagiri-kawaii01/broky.git</connection>
     </scm>
     <modules>
